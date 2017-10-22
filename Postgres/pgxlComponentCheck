@@ -1,0 +1,32 @@
+pgxc_monitor -Z node -h 10.138.32.212 -p 30001 -U serveradm
+#echo "Coordinator1 Status"
+#echo $?
+if [ $? -eq 0 ]; then
+        echo "Coordinator1 Success"
+    else
+        echo "Coordinator1 Fail"
+    fi
+
+pgxc_monitor -Z node -h 10.138.32.213 -p 30002 -U serveradm
+#echo "Coordinator2 Status"
+#echo $?
+if [ $? -eq 0 ]; then
+        echo "Coordinator2 Success"
+    else
+        echo "Coordinator2 Fail"
+    fi
+
+pgxc_monitor -Z node -h 10.138.32.214 -p 30003 -U serveradm
+#echo "Coordinator3 Status"
+#echo $?
+if [ $? -eq 0 ]; then
+        echo "Coordinator3 Success"
+    else
+        echo "Coordinator2 Fail"
+    fi
+
+pgxc_monitor -Z gtm -h 10.138.32.236 -p 8080
+if [ $? -eq 0 ]; then
+        echo "GTM Master Success"
+    else
+        echo "GTM Master Fail"

@@ -1,0 +1,482 @@
+select * from pg_settings;
+alltrade=# select * from pg_settings where name like 'gtm_host';
+-[ RECORD 1 ]---+--------------------------------------------
+name            | gtm_host
+setting         | 10.138.32.75
+unit            | 
+category        | GTM Connection
+short_desc      | Host name or address of GTM
+extra_desc      | 
+context         | postmaster
+vartype         | string
+source          | configuration file
+min_val         | 
+max_val         | 
+enumvals        | 
+boot_val        | localhost
+reset_val       | 10.138.32.75
+sourcefile      | /opt/damocles/nodes/coord.1/postgresql.conf
+sourceline      | 682
+pending_restart | f
+*****************************************************************************************************************************************************************
+select * from  pg_stat_user_indexes;
+alltrade=# select * from  pg_stat_user_indexes where relname = 'print_history';              
+-[ RECORD 1 ]-+-------------------
+relid         | 19821
+indexrelid    | 20767
+schemaname    | public
+relname       | print_history
+indexrelname  | print_history_pkey
+idx_scan      | 0
+idx_tup_read  | 0
+idx_tup_fetch | 0
+-[ RECORD 2 ]-+-------------------
+relid         | 19821
+indexrelid    | 21260
+schemaname    | public
+relname       | print_history
+indexrelname  | idx_print_history
+idx_scan      | 0
+idx_tup_read  | 0
+idx_tup_fetch | 0
+*****************************************************************************************************************************************************************
+select * from pg_shadow;
+alltrade=# select * from pg_shadow;
+    usename     | usesysid | usecreatedb | usesuper | userepl | usebypassrls |               passwd                | valuntil | useconfig 
+----------------+----------+-------------+----------+---------+--------------+-------------------------------------+----------+-----------
+ admin_alltrade |    16415 | f           | f        | f       | f            | md5e2b723855d1a22a6adde5110793af338 |          | 
+ read_only      |    16416 | f           | f        | f       | f            | md5557af0690a3b6a24d3ff25170d430288 |          | 
+ ro_alltrade    |    16417 | f           | f        | f       | f            | md5764bdb09ae33ed94232dad6858bd426d |          | 
+ serveradm      |       10 | t           | t        | t       | t            | md5dca2770ef4938ebd85760e7e71eb2987 |          | 
+ toro           |    18726 | f           | f        | f       | f            | md562d1d4c0fdd9a6b6d0510e2224e131c1 |          | 
+(5 rows)
+*****************************************************************************************************************************************************************
+select * from pg_stat_user_tables;
+alltrade=# select * from  pg_stat_user_indexes where relname = 'print_history';       
+-[ RECORD 1 ]-+-------------------
+relid         | 19821
+indexrelid    | 20767
+schemaname    | public
+relname       | print_history
+indexrelname  | print_history_pkey
+idx_scan      | 0
+idx_tup_read  | 0
+idx_tup_fetch | 0
+-[ RECORD 2 ]-+-------------------
+relid         | 19821
+indexrelid    | 21260
+schemaname    | public
+relname       | print_history
+indexrelname  | idx_print_history
+idx_scan      | 0
+idx_tup_read  | 0
+idx_tup_fetch | 0
+*****************************************************************************************************************************************************************
+select * from pg_indexes;
+alltrade=# select * from pg_indexes where tablename  = 'print_history';         
+-[ RECORD 1 ]----------------------------------------------------------------------------------------------------
+schemaname | public
+tablename  | print_history
+indexname  | print_history_pkey
+tablespace | 
+indexdef   | CREATE UNIQUE INDEX print_history_pkey ON print_history USING btree (document_no_key0, edition_data)
+-[ RECORD 2 ]----------------------------------------------------------------------------------------------------
+schemaname | public
+tablename  | print_history
+indexname  | idx_print_history
+tablespace | 
+indexdef   | CREATE INDEX idx_print_history ON print_history USING btree (int_created_date)
+*****************************************************************************************************************************************************************
+select * from pg_stat_xact_all_tables;
+alltrade=# select * from pg_stat_xact_all_tables where relname = 'print_history';
+-[ RECORD 1 ]-+--------------
+relid         | 19821
+schemaname    | public
+relname       | print_history
+seq_scan      | 0
+seq_tup_read  | 0
+idx_scan      | 0
+idx_tup_fetch | 0
+n_tup_ins     | 0
+n_tup_upd     | 0
+n_tup_del     | 0
+n_tup_hot_upd | 0
+*****************************************************************************************************************************************************************
+select * from pg_language;
+alltrade=# select * from pg_language;
+-[ RECORD 1 ]-+---------
+lanname       | internal
+lanowner      | 10
+lanispl       | f
+lanpltrusted  | f
+lanplcallfoid | 0
+laninline     | 0
+lanvalidator  | 2246
+lanacl        | 
+-[ RECORD 2 ]-+---------
+lanname       | c
+lanowner      | 10
+lanispl       | f
+lanpltrusted  | f
+lanplcallfoid | 0
+laninline     | 0
+lanvalidator  | 2247
+lanacl        | 
+-[ RECORD 3 ]-+---------
+lanname       | sql
+lanowner      | 10
+lanispl       | f
+lanpltrusted  | t
+lanplcallfoid | 0
+laninline     | 0
+lanvalidator  | 2248
+lanacl        | 
+-[ RECORD 4 ]-+---------
+lanname       | plpgsql
+lanowner      | 10
+lanispl       | t
+lanpltrusted  | t
+lanplcallfoid | 13281
+laninline     | 13282
+lanvalidator  | 13283
+lanacl        | 
+*****************************************************************************************************************************************************************
+select * from pg_authid;
+alltrade=# select * from pg_authid where rolname = 'serveradm';
+-[ RECORD 1 ]--+------------------------------------
+rolname        | serveradm
+rolsuper       | t
+rolinherit     | t
+rolcreaterole  | t
+rolcreatedb    | t
+rolcanlogin    | t
+rolreplication | t
+rolbypassrls   | t
+rolconnlimit   | -1
+rolpassword    | md5dca2770ef4938ebd85760e7e71eb2987
+rolvaliduntil  | 
+*****************************************************************************************************************************************************************
+select * from pg_stat_activity;
+alltrade=# select * from pg_stat_activity;
+-[ RECORD 1 ]----+--------------------------------
+datid            | 18727
+datname          | alltrade
+pid              | 3503
+usesysid         | 10
+usename          | serveradm
+application_name | psql
+client_addr      | 
+client_hostname  | 
+client_port      | -1
+backend_start    | 2017-09-29 17:16:24.541287+07
+xact_start       | 2017-09-29 17:46:07.602315+07
+query_start      | 2017-09-29 17:46:07.602315+07
+state_change     | 2017-09-29 17:46:07.602319+07
+waiting          | f
+state            | active
+backend_xid      | 
+backend_xmin     | 213378
+query            | select * from pg_stat_activity;
+*****************************************************************************************************************************************************************
+select * from pg_tables;
+alltrade=# select * from pg_tables where tableowner = 'toro' AND tablename = 'print_history';
+-[ RECORD 1 ]--------------
+schemaname  | public
+tablename   | print_history
+tableowner  | toro
+tablespace  | 
+hasindexes  | t
+hasrules    | f
+hastriggers | f
+rowsecurity | f
+****************************************************************************************************************************************************************
+select * from pg_available_extensions;
+alltrade=# select * from pg_available_extensions;
+-[ RECORD 1 ]-----+-----------------------------
+name              | plpgsql
+default_version   | 1.0
+installed_version | 1.0
+comment           | PL/pgSQL procedural language
+****************************************************************************************************************************************************************
+select * from pg_locks;
+alltrade=# select * from pg_locks;
+-[ RECORD 1 ]------+----------------
+locktype           | relation
+database           | 18727
+relation           | 11676
+page               | 
+tuple              | 
+virtualxid         | 
+transactionid      | 
+classid            | 
+objid              | 
+objsubid           | 
+virtualtransaction | 2/9901
+pid                | 3503
+mode               | AccessShareLock
+granted            | t
+fastpath           | t
+-[ RECORD 2 ]------+----------------
+locktype           | virtualxid
+database           | 
+relation           | 
+page               | 
+tuple              | 
+virtualxid         | 2/9901
+transactionid      | 
+classid            | 
+objid              | 
+objsubid           | 
+virtualtransaction | 2/9901
+pid                | 3503
+mode               | ExclusiveLock
+granted            | t
+fastpath           | t
+****************************************************************************************************************************************************************
+select * from pg_stat_all_tables;
+alltrade=# vacuum analyze print_history;
+VACUUM
+alltrade=# select * from pg_stat_all_tables where relname = 'print_history';
+-[ RECORD 1 ]-------+-----------------------------
+relid               | 19821
+schemaname          | public
+relname             | print_history
+seq_scan            | 2
+seq_tup_read        | 0
+idx_scan            | 0
+idx_tup_fetch       | 0
+n_tup_ins           | 0
+n_tup_upd           | 0
+n_tup_del           | 0
+n_tup_hot_upd       | 0
+n_live_tup          | 0
+n_dead_tup          | 0
+n_mod_since_analyze | 0
+last_vacuum         | 
+last_autovacuum     | 
+last_analyze        | 2017-09-29 18:29:35.64973+07
+last_autoanalyze    | 
+vacuum_count        | 0
+autovacuum_count    | 0
+analyze_count       | 1
+autoanalyze_count   | 0
+****************************************************************************************************************************************************************
+select * from pg_stat_database;
+alltrade=# select * from pg_stat_database where datname = 'alltrade';
+-[ RECORD 1 ]--+------------------------------
+datid          | 18727
+datname        | alltrade
+numbackends    | 2
+xact_commit    | 18783
+xact_rollback  | 217
+blks_read      | 1253
+blks_hit       | 1098750
+tup_returned   | 15465893
+tup_fetched    | 591521
+tup_inserted   | 19681
+tup_updated    | 2672
+tup_deleted    | 222
+conflicts      | 0
+temp_files     | 0
+temp_bytes     | 0
+deadlocks      | 0
+blk_read_time  | 0
+blk_write_time | 0
+stats_reset    | 2017-09-27 17:52:21.195085+07
+****************************************************************************************************************************************************************
+select * from pg_timezone_names;
+alltrade=# select * from pg_timezone_names where name like '%Bangkok%';
+-[ RECORD 1 ]------------
+name       | Asia/Bangkok
+abbrev     | ICT
+utc_offset | 07:00:00
+is_dst     | f
+****************************************************************************************************************************************************************
+select * from pg_class;
+alltrade=# select * from pg_class where relname = 'print_history';
+-[ RECORD 1 ]-------+-------------------------------------------------------------------
+relname             | print_history
+relnamespace        | 2200
+reltype             | 19823
+reloftype           | 0
+relowner            | 18726
+relam               | 0
+relfilenode         | 19821
+reltablespace       | 0
+relpages            | 0
+reltuples           | 0
+relallvisible       | 0
+reltoastrelid       | 19824
+relhasindex         | t
+relisshared         | f
+relpersistence      | p
+relkind             | r
+relnatts            | 11
+relchecks           | 0
+relhasoids          | f
+relhaspkey          | t
+relhasrules         | f
+relhastriggers      | f
+relhassubclass      | f
+relrowsecurity      | f
+relforcerowsecurity | f
+relispopulated      | t
+relreplident        | d
+relfrozenxid        | 210608
+relminmxid          | 1
+relacl              | {toro=arwdDxt/toro,ro_alltrade=r/toro,admin_alltrade=arwdDxt/toro}
+reloptions          | 
+****************************************************************************************************************************************************************
+select * from pg_stat_database_conflicts;
+alltrade=# select * from pg_stat_database_conflicts where datname = 'alltrade';
+-[ RECORD 1 ]----+---------
+datid            | 18727
+datname          | alltrade
+confl_tablespace | 0
+confl_lock       | 0
+confl_snapshot   | 0
+confl_bufferpin  | 0
+confl_deadlock   | 0
+****************************************************************************************************************************************************************
+select * from pg_collation
+alltrade=# select * from pg_collation where collcollate like '%TH%';        
+-[ RECORD 1 ]-+-----------
+collname      | th_TH
+collnamespace | 11
+collowner     | 10
+collencoding  | 6
+collcollate   | th_TH.utf8
+collctype     | th_TH.utf8
+-[ RECORD 2 ]-+-----------
+collname      | th_TH.utf8
+collnamespace | 11
+collowner     | 10
+collencoding  | 6
+collcollate   | th_TH.utf8
+collctype     | th_TH.utf8
+****************************************************************************************************************************************************************
+select * from pg_statio_all_indexes;
+alltrade=# select * from pg_statio_all_indexes where indexrelname like '%print_history%';
+-[ RECORD 1 ]-+--------------------------
+relid         | 19821
+indexrelid    | 21260
+schemaname    | public
+relname       | print_history
+indexrelname  | idx_print_history
+idx_blks_read | 0
+idx_blks_hit  | 0
+****************************************************************************************************************************************************************
+select * from pg_constraint;
+alltrade=# select * from pg_constraint where conname = 'print_history_pkey';    
+-[ RECORD 1 ]-+-------------------
+conname       | print_history_pkey
+connamespace  | 2200
+contype       | p
+condeferrable | f
+condeferred   | f
+convalidated  | t
+conrelid      | 19821
+contypid      | 0
+conindid      | 20767
+confrelid     | 0
+confupdtype   |  
+confdeltype   |  
+confmatchtype |  
+conislocal    | t
+coninhcount   | 0
+connoinherit  | t
+conkey        | {1,2}
+confkey       | 
+conpfeqop     | 
+conppeqop     | 
+conffeqop     | 
+conexclop     | 
+conbin        | 
+consrc        | 
+****************************************************************************************************************************************************************
+select * from pg_statio_all_sequences;
+alltrade=# select * from pg_statio_all_sequences where relname = 'print_history_print_history_pk_seq';
+-[ RECORD 1 ]----------------------------------
+relid      | 19835
+schemaname | public
+relname    | print_history_print_history_pk_seq
+blks_read  | 1
+blks_hit   | 1
+****************************************************************************************************************************************************************
+select * from pg_database;
+alltrade=# select * from pg_database where datname = 'alltrade' ;
+-[ RECORD 1 ]-+------------
+datname       | alltrade
+datdba        | 10
+encoding      | 6
+datcollate    | en_US.UTF-8
+datctype      | en_US.UTF-8
+datistemplate | f
+datallowconn  | t
+datconnlimit  | -1
+datlastsysoid | 13297
+datfrozenxid  | 3
+datminmxid    | 1
+dattablespace | 1663
+datacl        | 
+****************************************************************************************************************************************************************
+select * from pg_prepared_statements;
+alltrade=# select * from pg_prepared_statements;
+ name | statement | prepare_time | parameter_types | from_sql 
+------+-----------+--------------+-----------------+----------
+(0 rows)
+****************************************************************************************************************************************************************
+select * from pg_prepared_xacts;
+alltrade=# select * from pg_prepared_xacts;
+ transaction | gid | prepared | owner | database 
+-------------+-----+----------+-------+----------
+(0 rows)
+****************************************************************************************************************************************************************
+select * from pg_user;
+alltrade=# select * from pg_user;
+    usename     | usesysid | usecreatedb | usesuper | userepl | usebypassrls |  passwd  | valuntil | useconfig 
+----------------+----------+-------------+----------+---------+--------------+----------+----------+-----------
+ admin_alltrade |    16415 | f           | f        | f       | f            | ******** |          | 
+ read_only      |    16416 | f           | f        | f       | f            | ******** |          | 
+ ro_alltrade    |    16417 | f           | f        | f       | f            | ******** |          | 
+ serveradm      |       10 | t           | t        | t       | t            | ******** |          | 
+ toro           |    18726 | f           | f        | f       | f            | ******** |          | 
+(5 rows)
+****************************************************************************************************************************************************************
+select * from pg_file_settings;
+alltrade=# select * from pg_file_settings;                                          
+                 sourcefile                  | sourceline | seqno |            name            |      setting       | applied | error 
+---------------------------------------------+------------+-------+----------------------------+--------------------+---------+-------
+ /opt/damocles/nodes/coord.1/postgresql.conf |         64 |     1 | max_connections            | 100                | f       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        113 |     2 | shared_buffers             | 128MB              | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        126 |     3 | dynamic_shared_memory_type | posix              | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        447 |     4 | log_timezone               | Asia/Bangkok       | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        540 |     5 | datestyle                  | iso, mdy           | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        542 |     6 | timezone                   | Asia/Bangkok       | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        555 |     7 | lc_messages                | en_US.UTF-8        | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        557 |     8 | lc_monetary                | en_US.UTF-8        | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        558 |     9 | lc_numeric                 | en_US.UTF-8        | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        559 |    10 | lc_time                    | en_US.UTF-8        | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        562 |    11 | default_text_search_config | pg_catalog.english | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        641 |    12 | pgxc_node_name             | coord1             | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        668 |    13 | log_destination            | stderr             | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        669 |    14 | logging_collector          | on                 | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        670 |    15 | log_directory              | pg_log             | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        671 |    16 | listen_addresses           | *                  | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        672 |    17 | max_connections            | 100                | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        673 |    18 | max_prepared_transactions  | 1000               | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        674 |    19 | max_pool_size              | 300                | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        675 |    20 | pool_conn_keepalive        | 600                | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        676 |    21 | pool_maintenance_timeout   | 30                 | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        677 |    22 | hot_standby                | off                | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        680 |    23 | port                       | 30001              | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        681 |    24 | pooler_port                | 30011              | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        682 |    25 | gtm_host                   | 10.138.32.75       | t       | 
+ /opt/damocles/nodes/coord.1/postgresql.conf |        683 |    26 | gtm_port                   | 20101              | t       | 
+(26 rows)
+****************************************************************************************************************************************************************
+select * from pg_views;
+****************************************************************************************************************************************************************
+select * from pg_foreign_data_wrapper;
+****************************************************************************************************************************************************************
+select * from pg_stat_sys_tables;

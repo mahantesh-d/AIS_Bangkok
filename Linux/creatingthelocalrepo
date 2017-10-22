@@ -1,0 +1,14 @@
+Creating the docker container from image:
+	docker run --privileged -d -ti -e "container=docker" -v /sys/fs/cgroup:/sys/fs/cgroup <image_id> /bin/bash
+	docker run --privileged -d -ti -e "container=docker" -v /sys/fs/cgroup:/sys/fs/cgroup 196e0ce0c9fb	
+	
+Creating localrepo
+	yum install createrepo -y
+	createrepo --database /file_path/directory
+	vim /etc/yum.repos.d/ansible.repo
+		[Local-Repository]
+		name=Fedora $releasever - $basearch - Local
+		baseurl=http://ip_of_your_server/fedora/Packages
+		enabled=1
+		gpgcheck=0
+		

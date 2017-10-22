@@ -1,0 +1,22 @@
+--Before creating the user name and password update the system.auth
+		ALTER KEYSPACE system_auth WITH REPLICATION = {'class' : 'NetworkTopologyStrategy', 'dc1' : 3, 'dc2' : 2};
+--Creating user name and password
+		CREATE USER IF NOT EXISTS user_name WITH PASSWORD 'password' NOSUPERUSER | SUPERUSER 
+--Creating the DataCenter
+		Add the seed of new DataCenter into existing DataCenter seed && Add the old DataCenter seed into new DataCenter seed
+--Change the cluster name for cassandra node
+		UPDATE system.local SET cluster_name = '<new_cluster_name>' where key='local';
+--Then flush the sstable
+		./nodetool flush system
+--stop the cassandra node
+		kill -9 <cassandra-pid>
+--Change the cluster name in the cassandra.yaml
+		cluster_name = 'new_cluster_name'
+--start the cassandra node
+		./cassandra
+--start the cassandra node when you change the datacenter of the node 
+		./cassandra -Dcassandra.ignore_dc=true
+--Add this end of the cassandra-env.sh for replace/create node with same ip address before used by cassandra node
+		JVM_OPTS="$JVM_OPTS -Dcassandra.replace_address=<node_ip>"
+--Restart the node when you replace/create the node with IP address
+		./cassandra  -Dcassandra.allow_unsafe_replace=true

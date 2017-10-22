@@ -1,0 +1,49 @@
+#Node Details
+	#gtm_master 10.138.32.25
+	#gtm_slave 10.138.32.27
+	#Coord1-10.138.32.75
+	#Coord2-10.138.32.77
+	#gtm_proxy1-10.138.32.75
+	#gtm_proxy2-10.138.32.77
+	#DN1-10.138.32.80
+	#DN2-10.138.32.81
+	#DNSL1-10.138.32.26
+	#DNSL2-10.138.32.79
+
+#PostgresXL Installation
+	#Pre Installation Check
+		#1.ssh to all machine from gtm it should not ask for password
+			echo $(hostname; /usr/sbin/ip r | grep /24 |awk '{print $9}')
+			echo $(ssh serveradm@10.138.32.27 "hostname; /usr/sbin/ip r | grep /24 |awk '{print \$9}'")
+			echo $(ssh serveradm@10.138.32.75 "hostname; /usr/sbin/ip r | grep /24 |awk '{print \$9}'")
+			echo $(ssh serveradm@10.138.32.77 "hostname; /usr/sbin/ip r | grep /24 |awk '{print \$9}'")
+			echo $(ssh serveradm@10.138.32.80 "hostname; /usr/sbin/ip r | grep /24 |awk '{print \$9}'")
+			echo $(ssh serveradm@10.138.32.81 "hostname; /usr/sbin/ip r | grep /24 |awk '{print \$9}'")
+			echo $(ssh serveradm@10.138.32.26 "hostname; /usr/sbin/ip r | grep /24 |awk '{print \$9}'")
+			echo $(ssh serveradm@10.138.32.79 "hostname; /usr/sbin/ip r | grep /24 |awk '{print \$9}'")
+			echo "*************************************************************************************************************************************"
+		#2. Check the IPTABLES, firewall, SELinux, ports: all should be disable or configured properly
+			echo "Checking the GTM Master"
+			echo $(echo "IPTABLES:";/bin/systemctl status  IPTABLES.service | grep Active | sed 's/Active://';echo "FIREWALL:";/bin/systemctl status firewalld | grep Active | sed 's/Active://';echo "SELINUX:";/usr/sbin/getenforce;/usr/sbin/lsof -i :20000)
+			echo "-------------------------------------------------------------------------------------------------------------------------------------"
+			echo "Checking the GTM Slave"
+			echo $(ssh serveradm@10.138.32.27 "echo "IPTABLES:";/bin/systemctl status  IPTABLES.service | grep Active | sed 's/Active://';echo "FIREWALL:";/bin/systemctl status firewalld | grep Active | sed 's/Active://';echo "SELINUX:";/usr/sbin/getenforce;/usr/sbin/lsof -i :20001")
+			echo "-------------------------------------------------------------------------------------------------------------------------------------"
+			echo "Checking Coord1 and gtm_proxy1"
+			echo $(ssh serveradm@10.138.32.75 "echo "IPTABLES:";/bin/systemctl status  IPTABLES.service | grep Active | sed 's/Active://';echo "FIREWALL:";/bin/systemctl status firewalld | grep Active | sed 's/Active://';echo "SELINUX:";/usr/sbin/getenforce;/usr/sbin/lsof -i :30000,30011,20101")
+			echo "-------------------------------------------------------------------------------------------------------------------------------------"
+			echo "Checking Coord2 and gtm_proxy2"
+			echo $(ssh serveradm@10.138.32.77 "echo "IPTABLES:";/bin/systemctl status  IPTABLES.service | grep Active | sed 's/Active://';echo "FIREWALL:";/bin/systemctl status firewalld | grep Active | sed 's/Active://';echo "SELINUX:";/usr/sbin/getenforce;/usr/sbin/lsof -i :30002,30012,20102")
+			echo "-------------------------------------------------------------------------------------------------------------------------------------"
+			echo "Checking DN1"
+			echo $(ssh serveradm@10.138.32.80 "echo "IPTABLES:";/bin/systemctl status  iptables.service | grep Active | sed 's/Active://';echo "FIREWALL:";/bin/systemctl status firewalld | grep Active | sed 's/Active://';echo "SELINUX:"; /usr/sbin/getenforce;/usr/sbin/lsof -i :40001,40011")
+			echo "-------------------------------------------------------------------------------------------------------------------------------------"
+			echo "Checking DN2"
+			echo $(ssh serveradm@10.138.32.81 "echo "IPTABLES:";/bin/systemctl status  iptables.service | grep Active | sed 's/Active://';echo "FIREWALL:";/bin/systemctl status firewalld | grep Active | sed 's/Active://';echo "SELINUX:"; /usr/sbin/getenforce;/usr/sbin/lsof -i :40002,40012")
+			echo "-------------------------------------------------------------------------------------------------------------------------------------"
+			echo "Checking DNSL1"
+			echo $(ssh serveradm@10.138.32.26 "echo "IPTABLES:";/bin/systemctl status  iptables.service | grep Active | sed 's/Active://';echo "FIREWALL:";/bin/systemctl status firewalld | grep Active | sed 's/Active://';echo "SELINUX:"; /usr/sbin/getenforce;/usr/sbin/lsof -i :40101,40111")
+			echo "-------------------------------------------------------------------------------------------------------------------------------------"
+			echo "Checking DNSL2"
+			echo $(ssh serveradm@10.138.32.79 "echo "IPTABLES:";/bin/systemctl status  iptables.service | grep Active | sed 's/Active://';echo "FIREWALL:";/bin/systemctl status firewalld | grep Active | sed 's/Active://';echo "SELINUX:"; /usr/sbin/getenforce;/usr/sbin/lsof -i :40102,40112")
+			echo "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
