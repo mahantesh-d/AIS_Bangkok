@@ -231,3 +231,79 @@ test=# SELECT * FROM pgxc_node;
      9015 |    0 |    0 | 104007 |    0 | (0,4) | 16385 | datanode_1 | D         |     40001 | 10.138.32.80 | t              | f                |  -675012441
      9015 |    0 |    0 | 104008 |    0 | (0,5) | 16386 | datanode_2 | D         |     40002 | 10.138.32.81 | f              | f                | -1047623914
 (4 rows)
+
+
+To Remove the database from pg_catalog 
+
+delete from pg_catalog.pg_database where datname = 'alltrade_test';
+
+delete from pg_catalog.pg_database where datname = 'alltrade_iot';
+
+delete from pg_catalog.pg_database where datname = 'alltrade_prod';
+
+
+EXECUTE DIRECT ON (datanode_1) 'delete from pg_catalog.pg_database where datname = ''alltrade_prod''';
+
+EXECUTE DIRECT ON (datanode_1) 'delete from pg_catalog.pg_database where datname = ''alltrade_test''';
+
+EXECUTE DIRECT ON (datanode_1) 'delete from pg_catalog.pg_database where datname = ''alltrade_iot''';
+
+
+EXECUTE DIRECT ON (datanode_2) 'delete from pg_catalog.pg_database where datname = ''alltrade_prod''';
+
+EXECUTE DIRECT ON (datanode_2) 'delete from pg_catalog.pg_database where datname = ''alltrade_test''';
+
+EXECUTE DIRECT ON (datanode_2) 'delete from pg_catalog.pg_database where datname = ''alltrade_iot''';
+
+========================================
+Drop the database
+
+SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'alltrade_test';
+
+UPDATE pg_database SET datallowconn = 'false' WHERE datname = 'alltrade_test';
+
+alter database alltrade_test connection limit 1;
+
+SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'alltrade_iot';
+
+UPDATE pg_database SET datallowconn = 'false' WHERE datname = 'alltrade_iot';
+
+alter database alltrade_iot connection limit 1;
+
+SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'alltrade_prod';
+
+UPDATE pg_database SET datallowconn = 'false' WHERE datname = 'alltrade_prod';
+
+alter database alltrade_prod connection limit 1;
+
+DROP DATABASE alltrade_iot;
+DROP DATABASE alltrade_prod;
+DROP DATABASE  alltrade_test;
+
+=====================================
+
+CREATE USER admin_alltrade SUPERUSER LOGIN PASSWORD 'admin_alltrade';
+CREATE USER toro SUPERUSER LOGIN PASSWORD 'toro';
+CREATE USER serveradm SUPERUSER LOGIN PASSWORD 'serveradm';
+CREATE USER ro_alltrade SUPERUSER LOGIN PASSWORD 'ro_alltrade';
+
+================================
+CREATE DATABASE "alltrade_prod"
+  ENCODING 'UTF8'
+  LC_COLLATE = 'en_US.UTF-8'
+  LC_CTYPE = 'en_US.UTF-8';
+  
+CREATE DATABASE "alltrade_iot"
+  ENCODING 'UTF8'
+  LC_COLLATE = 'en_US.UTF-8'
+  LC_CTYPE = 'en_US.UTF-8';
+  
+CREATE DATABASE "alltrade_test"
+  ENCODING 'UTF8'
+  LC_COLLATE = 'en_US.UTF-8'
+  LC_CTYPE = 'en_US.UTF-8';  
+  
+=============================
+deleting the user from pg_catalog
+
+delete from pg_authid where rolname = 'admin_alltrade';  

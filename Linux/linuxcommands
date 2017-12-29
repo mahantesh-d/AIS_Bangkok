@@ -15,3 +15,10 @@ ss -l -p -n | grep ",<pid>," --check the port with pid
 grep -rnw '/opt/damocles/log/' -e '6204125' --search the word in folder
 
 cat `ls DBSID30A001G.20170801000026.INFO.log | sed 's/^/\/opt\/damocles\/log\//g' | tr '\n' ' '}`  | grep "Gave Response {" | sed 's/.*Gave Response //g'  |  jq -c '[ .RequestAbs.Action, .RequestAbs.HTTPRequestType,  .RequestAbs.ID,  .Status,  .RequestTotalTime, .RequestAbs.Filters ]' | sed 's/\[//g' | sed 's/\]//g' | sed ':again;$!N;$!b again; s/{[^}]*}//g'| sort -t "," -k 5 -r -n  > /tmp/log0801.csv  --search the logs store in different file
+
+Free the disk space
+-------------------
+
+lsof -nP +L1
+
+kill 9 (pid)

@@ -1,0 +1,61 @@
+CREATE USER admin_alltrade SUPERUSER LOGIN PASSWORD 'admin_alltrade';
+CREATE USER toro SUPERUSER LOGIN PASSWORD 'toro';
+CREATE USER serveradm SUPERUSER LOGIN PASSWORD 'serveradm';
+CREATE USER ro_alltrade SUPERUSER LOGIN PASSWORD 'ro_alltrade';
+
+================================
+CREATE DATABASE "alltrade_prod"
+  ENCODING 'UTF8'
+  LC_COLLATE = 'en_US.UTF-8'
+  LC_CTYPE = 'en_US.UTF-8';
+  
+CREATE DATABASE "alltrade_iot"
+  ENCODING 'UTF8'
+  LC_COLLATE = 'en_US.UTF-8'
+  LC_CTYPE = 'en_US.UTF-8';
+  
+CREATE DATABASE "alltrade_test"
+  ENCODING 'UTF8'
+  LC_COLLATE = 'en_US.UTF-8'
+  LC_CTYPE = 'en_US.UTF-8';  
+
+
+-------------------------------
+docker commit ca1 dmingod/pgxc_centos66_base:cassandra_seed
+
+docker commit ca2 dmingod/pgxc_centos66_base:cassandra_node
+
+docker commit gtm_m dmingod/pgxc_centos66_base:gtm_m
+
+docker commit d2 dmingod/pgxc_centos66_base:d2
+
+docker commit d1 dmingod/pgxc_centos66_base:d1
+
+docker commit c1 dmingod/pgxc_centos66_base:c1
+
+docker commit c2 dmingod/pgxc_centos66_base:c2
+
+
+docker stop d1
+docker rm d1
+
+docker stop d2
+docker rm d2
+
+docker stop c1
+docker rm c1
+
+docker stop c2
+docker rm c2
+
+docker stop gtm_m
+docker rm gtm_m
+
+docker stop ca1
+docker rm ca1
+
+docker stop ca2
+docker rm ca2
+
+docker stop hector
+docker rm hector

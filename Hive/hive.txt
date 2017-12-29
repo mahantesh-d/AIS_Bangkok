@@ -1,0 +1,7 @@
+CREATE EXTERNAL TABLE IF NOT EXISTS Names_text(
+    <fields> <data_type>)
+    COMMENT 'message'
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '|'
+    STORED AS TEXTFILE
+    LOCATION 'file location in hdfs';

@@ -1,0 +1,27 @@
+Create ConfigMaps from directories
+You can use *kubectl create configmap* to create a ConfigMap from multiple files in the same directory.
+For example:
+--kubectl create configmap game-config --from-file=docs/user-guide/configmap/kubectl
+
+--kubectl describe configmaps game-config
+Name:           game-config
+Namespace:      default
+Labels:         <none>
+Annotations:    <none>
+
+Data
+====
+game.properties:        158 bytes
+ui.properties:          83 bytes
+
+--kubectl get configmaps game-config -o yaml
+
+----------------------------------------------------------
+Create ConfigMaps from files
+You can use *kubectl create configmap* to create a ConfigMap from an individual file, or from multiple files.
+For example:
+kubectl create configmap game-config-2 --from-file=docs/user-guide/configmap/kubectl/game.properties
+
+You can pass in the --from-file argument multiple times to create a ConfigMap from multiple data sources.
+--kubectl create configmap game-config-2 --from-file=docs/user-guide/configmap/kubectl/game.properties --from-file=docs/user-guide/configmap/kubectl/ui.properties
+

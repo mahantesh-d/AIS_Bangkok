@@ -1,0 +1,165 @@
+version: '2'
+
+services:
+  kafka_listner:
+    container_name: kafka_listner
+    hostname: kafka_listner
+    image: dmingod/pgxc_centos66_base:kafka_listner
+    command: bash -c "service sshd restart; /bin/bash"
+    ports:
+      - "57020:22"
+    networks:
+      pgxc:
+        ipv4_address: 10.5.0.4
+    tty: true  
+
+  influxdb:
+    container_name: influxdb
+    hostname: influxdb
+    image: dmingod/pgxc_centos66_base:influxdb
+    command: bash -c "/etc/init.d/influxdb start; /bin/bash"
+    ports:
+      - "8086"
+      - "57021:22"
+    networks:
+      pgxc:
+        ipv4_address: 10.5.0.5
+    tty: true
+
+  D01:
+    container_name: D01
+    hostname: d01
+    image: dmingod/pgxc_centos66_base:d01
+    command: bash -c "service sshd restart; /bin/bash"
+    ports:
+      - "7788"
+      - "57022:22"
+    networks:
+      pgxc:
+        ipv4_address: 10.5.0.6
+    tty: true
+
+  cassandra_node:
+    container_name: ca2
+    hostname: cassandranode
+    image: dmingod/pgxc_centos66_base:cassandra_seed
+    command: bash -c "service sshd restart; su -c '/opt/cassandra/apache-cassandra-3.9/bin/cassandra' serveradm; /bin/bash"
+    ports:
+      - "9042"
+      - "58022:22"
+    networks:
+      pgxc:
+        ipv4_address: 10.5.0.7
+    tty: true
+    depends_on:
+      - cassandra_seed
+    
+  cassandra_seed:
+    container_name: ca1
+    hostname: cassandraseed
+    image: dmingod/pgxc_centos66_base:cassandra_seed
+    command: bash -c "service sshd restart; su -c '/opt/cassandra/apache-cassandra-3.9/bin/cassandra' serveradm; sleep 50s; pushschema; /bin/bash"
+    ports:
+      - "9042"
+      - "59022:22"
+    networks:
+      pgxc:
+        ipv4_address: 10.5.0.8
+    tty: true
+    depends_on:
+      - gtm
+      
+  hector:
+    container_name: hector
+    hostname: hector
+    image: dmingod/pgxc_centos66_base:hector
+    command: bash -c "service sshd restart; hector_sh; /bin/bash"
+    ports:
+      - "9001:9001"
+      - "60022:22"
+    networks:
+      pgxc:
+        ipv4_address: 10.5.0.9
+    tty: true
+    depends_on:
+      - cassandra_node
+      - gtm  
+
+  gtm:
+    container_name: gtm_m
+    hostname: gtm
+    image: dmingod/pgxc_centos66_base:gtm_m
+    command: bash -c "service sshd restart; su -c '/usr/local/pgsql/bin/pgxc_ctl start all' postgres; sleep 50s; /usr/bin/ssh postgres@c1 'pushschema';  /bin/bash"
+    ports:
+      - "61022:22"
+    networks:
+      pgxc:
+        ipv4_address: 10.5.0.10
+    tty: true
+    depends_on:
+      - c1
+      - c2
+      - d1
+      - d2
+   
+  c1:
+    container_name: c1
+    hostname: c1
+    image: dmingod/pgxc_centos66_base:c1
+    command: bash -c "service sshd restart; /bin/bash"
+    ports:
+      - "30001:30001"
+      - "62022:22"
+    networks:
+      pgxc:
+        ipv4_address: 10.5.0.11
+    tty: true
+
+
+  c2:
+    container_name: c2
+    hostname: c2
+    image: dmingod/pgxc_centos66_base:c2
+    command: bash -c "service sshd restart; /bin/bash"
+    ports:
+      - "30002:30002"
+      - "63022:22"
+    networks:
+      pgxc:
+        ipv4_address: 10.5.0.12
+    tty: true
+
+
+  d1:
+    container_name: d1
+    hostname: d1
+    image: dmingod/pgxc_centos66_base:d1
+    command: bash -c "service sshd restart; /bin/bash"
+    ports:
+      - "40001:40001"
+      - "64022:22"
+    networks:
+      pgxc:
+        ipv4_address: 10.5.0.21
+    tty: true
+    
+  d2:
+    container_name: d2
+    hostname: d2
+    image: dmingod/pgxc_centos66_base:d2
+    command: bash -c "service sshd restart; /bin/bash"
+    ports:
+      - "40002:40002"
+      - "65022:22"
+    networks:
+      pgxc:
+        ipv4_address: 10.5.0.22
+    tty: true
+
+networks:
+  pgxc:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1 

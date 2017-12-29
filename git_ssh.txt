@@ -1,0 +1,22 @@
+ssh-keygen -t rsa -b 4096 -C "mahantesh.dhale@unotechsoft.com"
+
+/home/postgres/mahantesh
+
+eval $(ssh-agent -s)
+
+ssh-add /home/postgres/mahantesh
+
+clip < ssh-add /home/postgres/mahantesh
+
+
+
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAgEA5REsxO7uvcJS9vmd47/XflMTm2F9tDIm3Ity7RLNDVJ5c4wh1El56qZeQYQ/UAQydkRHGKzGkOGVnvCc+Ahekw6lV0m1XGfUhyzxLMmuFXU8mgolFvVQ5SqP84A741vqxgbz+jznC8p5CZ/jPeUAx61TuzXDSHEIAYlLRs/kxgiIqPR2lqnXkLDd95RCPsT15iAUV+qOlDALKG06SlN6fPF3PerSRFKFumjBuMdKk9daYYBN8NPzbD/H6eLHzaY+bAr1gfZTkV5875NhxqcEcD9218sT8No2/w1EY8NQorVyRs84RWF57J7IIeupOiknfgmGx8bM3XFJBpV3/zDQ5J0Mtkvtq0F5iYv0fJTPgGgvLKw2NEQ8cNWgWYYldLvJ9q7+DipBkMdrCJ8w9p8eg00kI00nzwEQvqwc7qQi3+9lnKi/36VmfJWxVXaQs94AHael0nkKxuOYDNGlGDEb3qF48xs0Ge1eBg/FYaItmltTt6gJB/wkiMcb1aO40BOGP4Qr8BCfKDE/Cr9v+wkkRNPPpuqExigojfiODRa1HV/pP6PMo1XDUVjLQLt5jQzRSL3Zw45BTahOYBrE0EfjvFdtMZp/cnZHy7ennOyMCg5QuS20PxSvH4K+I+zOqlfk4Kuesfa+MhKVE8f0bAPrBtdf0Q0+d2G/YG2OgiBHgXE= mahantesh.dhale@unotechsoft.com
+
+
+ssh-agent bash -c 'ssh-add /home/postgres/mahantesh; git clone git@github.com:dminGod/d30_40_schema.git'
+
+
+ssh-agent bash -c 'ssh-add /home/postgres/mahantesh; git clone git@github.com:dminGod/d30_40_schema.git'
+
+
+ssh-agent bash -c 'ssh-add /opt/mahantesh; git clone git@github.com:dminGod/D30-HectorDA.git'

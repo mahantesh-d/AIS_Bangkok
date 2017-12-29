@@ -19,5 +19,11 @@ service influxdb start
 #verifying the influxd
 ps aux | grep influx | grep -v "grep" | awk '{print $2}'
 
+#starting the influxdb services
+service influxd start &
+
+#Checking the status
+service influxd status | grep -w "active"
+
 #influx cli
 influx

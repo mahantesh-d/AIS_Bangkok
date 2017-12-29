@@ -1,0 +1,62 @@
+crosstab function works example and explaination
+
+create table evaluations (student text, subject text, evaluation_result float, evaluation_date date);
+
+Insert into evaluations (student , subject, evaluation_result, evaluation_date) values ('Smith, John', 'Music', 7.0, '2016-03-01' );
+Insert into evaluations (student , subject, evaluation_result, evaluation_date) values ('Smith, John', 'Maths', 4.0, '2016-03-01' );
+Insert into evaluations (student , subject, evaluation_result, evaluation_date) values ('Smith, John', 'History', 9.0, '2016-03-22' );
+Insert into evaluations (student , subject, evaluation_result, evaluation_date) values ('Smith, John', 'Language', 7.0, '2016-03-15' );
+Insert into evaluations (student , subject, evaluation_result, evaluation_date) values ('Smith, John', 'Geography', 9.0, '2016-03-04' );
+Insert into evaluations (student , subject, evaluation_result, evaluation_date) values ('Gabriel, Peter', 'Music', 2.0, '2016-03-01' );
+Insert into evaluations (student , subject, evaluation_result, evaluation_date) values ('Gabriel, Peter', 'Maths', 10.0, '2016-03-01' );
+Insert into evaluations (student , subject, evaluation_result, evaluation_date) values ('Gabriel, Peter', 'History', 7.0, '2016-03-22' );
+Insert into evaluations (student , subject, evaluation_result, evaluation_date) values ('Gabriel, Peter', 'Language', 4.0, '2016-03-22' );
+Insert into evaluations (student , subject, evaluation_result, evaluation_date) values ('Gabriel, Peter', 'Geography', 10.0, '2016-03-04' );
+
+
+--The SELECT must return 3 columns.
+--The first column in the SELECT will be the identifier of every row in the pivot table or final result. 
+--The second column in the SELECT represents the categories in the pivot table.
+--The third column in the SELECT represents the value to be assigned to each cell of the pivot table. 
+
+
+ SELECT *
+FROM crosstab( 'select student, subject, evaluation_result from evaluations order by 1,2')
+     AS final_result(Student TEXT, Geography float,History float,Language float,Maths float,Music float);
+    student     | geography | history | language | maths | music
+----------------+-----------+---------+----------+-------+-------
+ Gabriel, Peter |        10 |       7 |        4 |    10 |     2
+ Smith, John    |         9 |       9 |        7 |     4 |     7
+
+	
+SELECT *
+FROM crosstab( 'select student, subject, evaluation_date from evaluations order by 3')
+     AS final_result(Student TEXT, evaluation_date date);
+    student     | evaluation_date
+----------------+-----------------
+ Smith, John    | 2016-03-01
+ Gabriel, Peter | 2016-03-01
+ Smith, John    | 2016-03-04
+ Gabriel, Peter | 2016-03-04
+ Smith, John    | 2016-03-15
+ Gabriel, Peter | 2016-03-22
+ Smith, John    | 2016-03-22
+ 
+ SELECT *
+FROM crosstab( 'select subject, student,  evaluation_result from evaluations order by 1, 3')
+     AS final_result(Subject Text, Smith float, Gabriel float);
+  subject  | smith | gabriel
+-----------+-------+---------
+ Geography |     9 |      10
+ History   |     7 |       9
+ Language  |     4 |       7
+ Maths     |     4 |      10
+ Music     |     2 |       7
+ 
+  SELECT *
+FROM crosstab( 'select subject, student,  evaluation_result from evaluations order by 1, 3 limit 4')
+     AS final_result(Subject Text, Smith float, Gabriel float);
+  subject  | smith | gabriel
+-----------+-------+---------
+ Geography |     9 |      10
+ History   |     7 |       9
