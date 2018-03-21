@@ -1,0 +1,233 @@
+Installing the Elastic Search Cluster
+1. Prequiste
+	requires JDK 8. first install JDK8
+2. Download the tar 
+	wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.1.3.tar.gz
+3. untar the elastic search
+	tar -zxvf elasticsearch-6.1.3.tar.gz
+4. run the elastic search	
+	cd elasticsearch-6.1.3/bin/
+	./elasticsearch
+5. Test elasticsearch is running
+	curl http://localhost:9200
+	{
+	  "name" : "gUzY08N",
+	  "cluster_name" : "elasticsearch",
+	  "cluster_uuid" : "qaCnnPBeQTuKzRDJe__ypQ",
+	  "version" : {
+		"number" : "6.1.3",
+		"build_hash" : "af51318",
+		"build_date" : "2018-01-26T18:22:55.523Z",
+		"build_snapshot" : false,
+		"lucene_version" : "7.1.0",
+		"minimum_wire_compatibility_version" : "5.6.0",
+		"minimum_index_compatibility_version" : "5.0.0"
+	  },
+	  "tagline" : "You Know, for Search"
+	}
+6. starting elasticsearch as daemon
+	elasticsearch -d -p pid
+7. stopping the elasticsearch daemon
+	kill `cat pid`
+8. Do above steps in all nodes 
+9. Stop the elasticsearch in all nodes
+10. open the configuration elasticsearch.yml
+11. start editiing the configuration
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+#
+cluster.name: my-application
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
+node.name: node-1
+#
+# Add custom attributes to the node:
+#
+node.attr.rack: r1
+#
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+path.data: /opt/elastic/elasticsearch-6.1.3/data
+#
+# Path to log files:
+#
+path.logs: /opt/elastic/elasticsearch-6.1.3/logs
+#
+# ----------------------------------- Memory -----------------------------------
+#
+# Lock the memory on startup:
+#
+bootstrap.memory_lock: false
+#
+# Make sure that the heap size is set to about half the memory available
+# on the system and that the owner of the process is allowed to use this
+# limit.
+#
+# Elasticsearch performs poorly when the system is swapping the memory.
+#
+# ---------------------------------- Network -----------------------------------
+#
+# Set the bind address to a specific IP (IPv4 or IPv6):
+#
+network.host: 10.138.32.26
+#
+# Set a custom port for HTTP:
+#
+http.port: 9200
+#
+# For more information, consult the network module documentation.
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when new node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+#EXAMPLE:- ["10.138.32.75","10.138.32.26"....."n"]
+discovery.zen.ping.unicast.hosts: ["10.138.32.75"]
+#
+# Prevent the "split brain" by configuring the majority of nodes (total number of master-eligible nodes / 2 + 1):
+#
+discovery.zen.minimum_master_nodes: 1
+#
+# For more information, consult the zen discovery module documentation.
+#
+# ---------------------------------- Gateway -----------------------------------
+#
+# Block initial recovery after a full cluster restart until N nodes are started:
+#
+#gateway.recover_after_nodes: 3
+#
+# For more information, consult the gateway module documentation.
+#
+# ---------------------------------- Various -----------------------------------
+#
+# Require explicit names when deleting indices:
+#
+#action.destructive_requires_name: true
+12. Save and Exit
+13. OS level configuration
+	--set max_map_count value
+		*sysctl -w vm.max_map_count=262144
+	--setting the ulimit for 
+		*vim /etc/sercurity/limits.conf
+			serveradm        soft    nofile          65536
+			serveradm        hard    nofile          65536
+	--restart the session		
+14. Start the elasticsearch in all nodes
+	--elasticsearch -d -p pid
+15.	Verify the cluster working
+	--http://10.138.32.26:9200/_nodes/process?pretty
+		{
+		  "_nodes" : {
+			"total" : 2,
+			"successful" : 2,
+			"failed" : 0
+		  },
+		  "cluster_name" : "my-application",
+		  "nodes" : {
+			"DS-_8gq0QVWGey7PPwMOPg" : {
+			  "name" : "node-2",
+			  "transport_address" : "10.138.32.75:9300",
+			  "host" : "10.138.32.75",
+			  "ip" : "10.138.32.75",
+			  "version" : "6.1.3",
+			  "build_hash" : "af51318",
+			  "roles" : [
+				"master",
+				"data",
+				"ingest"
+			  ],
+			  "attributes" : {
+				"rack" : "r1"
+			  },
+			  "process" : {
+				"refresh_interval_in_millis" : 1000,
+				"id" : 22871,
+				"mlockall" : false
+			  }
+			},
+			"gUzY08NMSHilPYW2pez2hg" : {
+			  "name" : "node-1",
+			  "transport_address" : "10.138.32.26:9300",
+			  "host" : "10.138.32.26",
+			  "ip" : "10.138.32.26",
+			  "version" : "6.1.3",
+			  "build_hash" : "af51318",
+			  "roles" : [
+				"master",
+				"data",
+				"ingest"
+			  ],
+			  "attributes" : {
+				"rack" : "r1"
+			  },
+			  "process" : {
+				"refresh_interval_in_millis" : 1000,
+				"id" : 8440,
+				"mlockall" : false
+			  }
+			}
+		  }
+		}
+		
+	--http://10.138.32.26:9200/_cluster/state?pretty	
+		{
+		  "cluster_name" : "my-application",
+		  "compressed_size_in_bytes" : 298,
+		  "version" : 10,
+		  "state_uuid" : "3iPFSvYJQS-KrbcRYrEfKg",
+		  "master_node" : "DS-_8gq0QVWGey7PPwMOPg",
+		  "blocks" : { },
+		  "nodes" : {
+			"DS-_8gq0QVWGey7PPwMOPg" : {
+			  "name" : "node-2",
+			  "ephemeral_id" : "eX8q1_erQ7Svyu-80ZovtQ",
+			  "transport_address" : "10.138.32.75:9300",
+			  "attributes" : {
+				"rack" : "r1"
+			  }
+			},
+			"gUzY08NMSHilPYW2pez2hg" : {
+			  "name" : "node-1",
+			  "ephemeral_id" : "CHBWAeRVT9enKLE87kZQog",
+			  "transport_address" : "10.138.32.26:9300",
+			  "attributes" : {
+				"rack" : "r1"
+			  }
+			}
+		  },
+		  "metadata" : {
+			"cluster_uuid" : "qaCnnPBeQTuKzRDJe__ypQ",
+			"templates" : { },
+			"indices" : { },
+			"index-graveyard" : {
+			  "tombstones" : [ ]
+			}
+		  },
+		  "routing_table" : {
+			"indices" : { }
+		  },
+		  "routing_nodes" : {
+			"unassigned" : [ ],
+			"nodes" : {
+			  "DS-_8gq0QVWGey7PPwMOPg" : [ ],
+			  "gUzY08NMSHilPYW2pez2hg" : [ ]
+			}
+		  },
+		  "restore" : {
+			"snapshots" : [ ]
+		  },
+		  "snapshot_deletions" : {
+			"snapshot_deletions" : [ ]
+		  },
+		  "snapshots" : {
+			"snapshots" : [ ]
+		  }
+		}
+16. Reference
+			https://www.digitalocean.com/community/tutorials/how-to-set-up-a-production-elasticsearch-cluster-on-centos-7

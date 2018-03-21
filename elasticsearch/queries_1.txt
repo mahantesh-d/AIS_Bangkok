@@ -1,0 +1,84 @@
+Creating the index
+===================
+Index are create using the PUT method with json payload consists indice settings
+curl -XPUT '10.138.32.26:9200/dummy' -H 'Content-Type: application/json' -d'
+{
+    "settings" : {
+        "index" : {
+            "number_of_shards" : 3, 
+            "number_of_replicas" : 2 
+        }
+    }
+}
+'
+
+Deleting the index
+==================
+curl -XDELETE '10.138.32.26:9200/dummy?pretty'
+
+Get the index
+=============
+curl -xGET '10.138.32.26:9200/dummy?pretty'
+
+Check the indices exists
+========================
+curl -XHEAD 'localhost:9200/twitter?pretty'
+
+Close and Open indice
+=====================
+curl -XPOST '10.138.32.26:9200/dummy/_close?pretty'
+curl -XPOST '10.138.32.26:9200/dummy/_open?pretty'
+----------------------------------------------------------------------------------------------------
+Put Mapping
+===========
+Allows to add new type or new field to existing indices
+curl -XPUT '10.138.32.26:9200/dummy/_mapping/user' -H 'Content-Type: application/json' -d'
+ {
+   "properties": {
+     "email": {
+       "type": "keyword"
+     }
+   }
+ }'
+Adding Object or fields to index
+================================= 
+curl -XPUT '10.138.32.26:9200/dummy/_mapping/user' -H 'Content-Type: application/json' -d'
+ {
+	"properties": {
+		"address": {
+			"properties": {
+				"street": {"type": "text"},
+				"pincode": {"type": "integer"}
+			}
+		}
+	}
+}' 
+Updating the existing Object/fields
+===================================
+curl -XPUT '10.138.32.26:9200/dummy/_mapping/employ?pretty' -H 'Content-Type: application/json' -d'
+{
+	"properties":{
+		"first": {"type":"text"},
+		"last": {"type":"text"}
+	}
+}'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

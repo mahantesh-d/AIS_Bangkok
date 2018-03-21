@@ -1,0 +1,41 @@
+10.138.47.83:9092 10.138.47.84:9092 10.138.47.85:9092  10.138.47.80:2181
+
+
+starting kafka server
+./kafka-server-start.sh ../config/server.properties
+
+create topic
+/kafka-topics.sh  --zookeeper 10.138.47.80:2181 --create --replication-factor 1 --partitions 1 --topic test
+
+list topic
+./kafka-topics.sh --zookeeper 10.138.47.83:2181 --list
+
+delete topic
+./kafka-topics.sh --zookeeper 10.138.47.80:2181 --delete --topic test
+
+starting producer
+./kafka-console-producer.sh --broker-list 10.138.47.83:9092 --topic test
+
+starting consumer
+./kafka-console-consumer.sh --bootstrap-server 10.138.47.83:9092 --topic test --from-beginning
+
+view the message from beginning
+./kafka-console-consumer.sh --bootstrap-server 10.138.47.83:9092 --topic local_service_requests_new8 --from-beginning
+
+count the message
+./kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list 10.138.47.83:9092 --topic local_service_requests_new8 
+./kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list 10.138.47.83:9092 --topic app_config
+
+set retention.ms to a small value, then wait a minute
+./kafka-configs.sh --zookeeper 10.138.47.80:2181 --entity-type topics --alter --add-config retention.ms=1000 --entity-name local_service_requests_new8
+
+check if the value set successfully:
+./kafka-configs.sh --zookeeper 10.138.47.80:2181 --entity-type topics --describe --entity-name local_service_requests_new8
+
+restore the default retention.ms value:
+./kafka-configs.sh --zookeeper 10.138.47.80:2181 --entity-type topics --alter --delete-config retention.ms --entity-name local_service_requests_new8
+
+delete topic
+./kafka-topics.sh --zookeeper 10.138.47.80:2181 --delete --topic test
+
+

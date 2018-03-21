@@ -1,0 +1,62 @@
+Our ELK stack setup has four main components:
+	--Logstash: The server component of Logstash that processes incoming logs
+	--Elasticsearch: Stores all of the logs
+	--Kibana: Web interface for searching and visualizing logs, which will be proxied through Nginx
+	--Filebeat: Installed on client servers that will send their logs to Logstash, Filebeat serves as a log shipping agent that utilizes the lumberjack 		networking protocol to communicate with Logstash
+
+
+
+Start the logstash
+==================
+/usr/share/logstash/bin/./logstash -f first-pipeline.conf
+==================
+Start the filebeat
+==================
+/usr/share/filebeat/bin/./filebeat -e -c hectorlog.yml -d "publish"
+========================
+filebeat.yml --reference
+========================
+filebeat:
+  prospectors:
+    -
+      paths:
+        - /var/log/secure
+        - /var/log/messages
+      #  - /var/log/*.log
+      
+      input_type: log
+      
+      document_type: syslog
+
+  registry_file: /var/lib/filebeat/registry
+
+output:
+  logstash:
+    hosts: ["elk_server_private_ip:5044"]
+    bulk_max_size: 1024
+
+    tls:
+      certificate_authorities: ["/etc/pki/tls/certs/logstash-forwarder.crt"]
+
+shipper:
+
+logging:
+  files:
+    rotateeverybytes: 10485760 # = 10MB
+=========================	
+logstash.conf --reference
+=========================
+input {
+    beats {
+        port => "5044"
+    }
+}
+# The filter part of this file is commented out to indicate that it is
+# optional.
+# filter {
+#
+# }
+output {
+  elasticsearch { hosts => ["10.138.32.26:9200"] }
+  stdout { codec => rubydebug }
+}

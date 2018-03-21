@@ -1,0 +1,23 @@
+CREATING the index
+Use PUT
+	--PUT http://<host_ip>:9200/<index_name>
+		Eg: PUT http://10.138.32.26:9200/schools
+
+Use Head and POST for Posting the data
+	--HEAD http://<host_ip>:9200/<index_name>
+		Eg: HEAD http://10.138.32.26:9200/schools
+			DATA:
+				{
+				"index":{
+					"_index":"schools", "_type":"school", "_id":"1"
+						}
+				}
+
+	--POST http://<host_ip>:9200/<index_name>/_index
+		Eg: HEAD http://10.138.32.26:9200/schools/_index
+			DATA:	
+				{
+				   "name":"Central School", "description":"CBSE Affiliation", "street":"Nagan",
+				   "city":"paprola", "state":"HP", "zip":"176115", "location":[31.8955385, 76.8380405],
+				   "fees":2000, "tags":["Senior Secondary", "beautiful campus"], "rating":"3.5"
+				}	

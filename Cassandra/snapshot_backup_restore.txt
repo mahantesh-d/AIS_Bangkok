@@ -1,0 +1,47 @@
+Taking the snapshot and restoring
+
+Taking backup/snapshot
+Step1: Take the snapshot of the orginal table using nodetool 
+	nodetool snapshot <keyspace>.<column_family>
+	nodetool snapshot alltrade_iot.local_service_requests_new8
+	OUTPUT:
+	Requested creating snapshot(s) for [alltrade_iot.local_service_requests_new8] with snapshot name [1515668117603] and options {skipFlush=false}
+	Snapshot directory: 1515668117603
+Step2: Take the schema backup
+	cqlsh -p password -u username <host_ip> -k <keyspace> -e "DESCRIBE <column_family>" > ~/column_family_backup
+	cqlsh -p cassandra -u cassandra 10.138.32.80 -k alltrade_iot -e "DESCRIBE local_service_requests_new8" > /tmp/local_service_requests_new8_backup
+Step3: Go to the data directory of that particular column_family
+	cd ~/<path-to-data>/data/keyspace/column_family-uuid/snapshot/[1-9]/
+	cd /app/data/alltrade_iot/local_service_requests_new8-e8f52640cf6b11e7b5818bac8d8c6181/snapshots/1515668117603
+
+Restoring backup/snapshot
+Step1: Create the schema using backup from previous step
+	cqlsh -p password -u username <host_ip> -k <keyspace> -f '~/column_family_backup'
+	cqlsh -p cassandra -u cassandra 10.138.32.80 -k alltrade_iot -f '/tmp/local_service_requests_new8_backup'
+Step2: Move files of the snapshot folder from previous step into the column_family on newly created schema
+	cp ~/<path-to-data>/data/keyspace/column_family-uuid/snapshot/[1-9]/* ~/<path-to-data>/data/keyspace/column_family-uuid/
+	cp /app/data/alltrade_iot/local_service_requests_new8-e8f52640cf6b11e7b5818bac8d8c6181/snapshots/1515668117603/* /app/data/alltrade_iot/local_service_requests_new_check_backup-106a0b50f6b811e7af7af7c3faa6bd43/
+Step3: use nodetool refresh to load newly placed sstable into the system without restart
+	nodetool refresh <keyspace> <column_family>
+	nodetool refresh alltrade_iot local_service_requests_new8_backup
+Step4: Verify the data in both the tables using cqlsh
+	cqlsh:alltrade_iot> select count(*) from local_service_requests_new_check_backup ;
+	 count
+	-------
+	 71938
+
+	(1 rows)
+
+	Warnings :
+	Aggregation query used without partition key
+
+	cqlsh:alltrade_iot> select count(*) from local_service_requests_new8 ;
+
+	 count
+	-------
+	 71938
+
+	(1 rows)
+
+	Warnings :
+	Aggregation query used without partition key

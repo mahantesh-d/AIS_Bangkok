@@ -1,0 +1,26 @@
+--docker commit
+	docker commit <container-id> docker-username/<repo-name>
+	Example: docker commit 52e2ba965e93 mahanteshd4140/mongosedb
+--Check the docker images
+	docker images
+--pick the newly created the images by commit
+	docker tag <image-id> docker-username/<repo-name>:<add-the-name(basically docker name in hub)>
+	docker tag d8aea20b924c mahanteshd4140/mongosedb:preinstallmongo
+--push the docker images
+	docker push docker-username/<repo-name>:<add-the-name(basically docker name in hub)>
+	docker push mahanteshd4140/mongosedb:preinstallmongo	
+	
+	
+stop running container
+
+docker stop test01
+commit the container
+
+docker commit test01 test02
+NOTE: The above, test02 is a new image that I'm constructing from the test01 container.
+
+re-run from the commited image
+
+docker run -p 8080:8080 -td test02
+
+yum -y install wget mlocate lsof net-tools less openssl openssh-clients openssh-server	

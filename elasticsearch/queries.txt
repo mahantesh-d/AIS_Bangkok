@@ -1,0 +1,297 @@
+Create Index
+--------------
+curl -POST http://10.138.32.26:9200/schools_gov
+{
+	"schools_gov": {
+		"aliases": {},
+		"mappings": {},
+		"settings": {
+			"index": {
+				"creation_date": "1517820811846",
+				"number_of_shards": "5",
+				"number_of_replicas": "1",
+				"uuid": "ob1RPewXSRWw7-QCv3yhZg",
+				"version": {
+					"created": "6010399"
+				},
+				"provided_name": "schools_gov"
+			}
+		}
+	}
+}
+
+Check the index
+	curl -GET http://<host_ip>:9200/_cat/indices?v
+	Eg: curl -GET http://10.138.32.26:9200/_cat/indices?v
+	health status index               uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+	yellow open   school              YTIjRY7ESlasGTvQCjGIpA   5   1          0            0      1.2kb          1.2kb
+	yellow open   .kibana             o-LfL7tEQXSytXF5RONthA   1   1          3            1     19.1kb         19.1kb
+	yellow open   test                Ebk9Gy5CSS2PfhFGSqBJ2Q   5   1          1            0      4.4kb          4.4kb
+	yellow open   schools             6Df9RDj6T62af8DqfNaG6Q   5   1          4            0     33.6kb         33.6kb
+	yellow open   logstash-2018.02.07 0e1UHDeDRPiIJiIc0jka6w   5   1     244573            0       49mb           49mb
+	yellow open   schools_gov         ob1RPewXSRWw7-QCv3yhZg   5   1          2            0     17.5kb         17.5kb
+	
+
+Create Mapping and Add data
+-----------------------------
+vim school_gov
+
+{"index":{"_index":"schools_gov", "_type":"school", "_id":"1"}}
+{"name":"Model School", "description":"CBSE Affiliation", "street":"silk city","city":"Hyderabad", "state":"AP", "zip":"500030", "location":[17.3903703, 78.4752129],"fees":200, "tags":["Senior Secondary", "beautiful campus"], "rating":"3"}
+{"index":{"_index":"schools_gov", "_type":"school", "_id":"2"}}
+{"name":"Government School", "description":"State Board Affiliation","street":"Hinjewadi", "city":"Pune", "state":"MH", "zip":"411057","location": [18.599752,73.6821995], "fees":500, "tags":["Great Sports"], "rating":"4"}
+:wq
+
+curl -s -H "Content-Type: application/x-ndjson" -XPOST 10.138.32.26:9200/_bulk --data-binary "@school_gov";echo
+{
+	"took": 140,
+	"errors": false,
+	"items": [{
+		"index": {
+			"_index": "schools_gov",
+			"_type": "school",
+			"_id": "1",
+			"_version": 1,
+			"result": "created",
+			"_shards": {
+				"total": 2,
+				"successful": 2,
+				"failed": 0
+			},
+			"_seq_no": 0,
+			"_primary_term": 1,
+			"status": 201
+		}
+	}, {
+		"index": {
+			"_index": "schools_gov",
+			"_type": "school",
+			"_id": "2",
+			"_version": 1,
+			"result": "created",
+			"_shards": {
+				"total": 2,
+				"successful": 2,
+				"failed": 0
+			},
+			"_seq_no": 0,
+			"_primary_term": 1,
+			"status": 201
+		}
+	}]
+}
+
+
+
+Create Mapping and Add data
+-----------------------------
+
+vim school
+
+{"index":{"_index":"schools", "_type":"school", "_id":"1"}}
+{"name":"Central School", "description":"CBSE Affiliation", "street":"Nagan", "city":"paprola", "state":"HP", "zip":"176115", "location":[31.8955385, 76.8380405],"fees":2000, "tags":["Senior Secondary", "beautiful campus"], "rating":"3.5"}
+{"index":{"_index":"schools", "_type":"school", "_id":"2"}}
+{"name":"Saint Paul School", "description":"ICSE Afiliation", "street":"Dawarka", "city":"Delhi", "state":"Delhi", "zip":"110075","location":[28.5733056,77.0122136], "fees":5000,"tags":["Good Faculty", "Great Sports"], "rating":"4.5"}
+{"index":{"_index":"schools", "_type":"school", "_id":"3"}}
+{"name":"Crescent School", "description":"State Board Affiliation", "street":"Tonk Road", "city":"Jaipur", "state":"RJ", "zip":"176114","location":[26.8535922,75.7923988],   "fees":2500, "tags":["Well equipped labs"], "rating":"4.5"}
+
+:wq
+curl -s -H "Content-Type: application/x-ndjson" -XPOST 10.138.32.26:9200/_bulk --data-binary "@school";echo
+{
+	"took": 158,
+	"errors": false,
+	"items": [{
+		"index": {
+			"_index": "schools",
+			"_type": "school",
+			"_id": "1",
+			"_version": 1,
+			"result": "created",
+			"_shards": {
+				"total": 2,
+				"successful": 2,
+				"failed": 0
+			},
+			"_seq_no": 0,
+			"_primary_term": 1,
+			"status": 201
+		}
+	}, {
+		"index": {
+			"_index": "schools",
+			"_type": "school",
+			"_id": "2",
+			"_version": 1,
+			"result": "created",
+			"_shards": {
+				"total": 2,
+				"successful": 2,
+				"failed": 0
+			},
+			"_seq_no": 0,
+			"_primary_term": 1,
+			"status": 201
+		}
+	}, {
+		"index": {
+			"_index": "schools",
+			"_type": "school",
+			"_id": "3",
+			"_version": 1,
+			"result": "created",
+			"_shards": {
+				"total": 2,
+				"successful": 2,
+				"failed": 0
+			},
+			"_seq_no": 0,
+			"_primary_term": 1,
+			"status": 201
+		}
+	}]
+}
+
+Querying the elasticSearch
+--------------------------
+	POST http://<host_ip>:9200/<index_name>/_search
+	Eg: POST http://10.138.32.26:9200/schools_gov/_search
+RequestBody:
+{
+   "query":{
+      "query_string":{
+         "query":"Hyderabad"
+      }
+   }
+}
+Above will query for "Hyderabad" in index=school_gov
+
+RequestBody:
+{
+   "query":{
+      "match_all":{}
+   }
+}
+
+Above will query for all in index=school_gov
+
+POST http://localhost:9200/_all/_search
+RequestBody:
+{
+   "query":{
+      "query_string":{
+         "query":"any_string"
+      }
+   }
+}
+
+Above will query for all in indices
+
+Query with field
+-----------------
+	POST http://<host_ip>:9200/<index>/_search?filter_path=<field_name>
+	Eg: POST http://10.138.32.26:9200/schools/_search?filter_path=hits.total
+	
+RequestBody:
+{
+   "query":{
+      "match_all":{}
+   }
+}	
+
+Adding or Updating the index
+	POST http://<host_ip>:9200/<index>/<mapping_name>/<id>
+	Eg: POST http://10.138.32.26:9200/schools/school/4
+RequestBody:
+{"name":"City School", "description":"ICSE", "street":"West End", "city":"Meerut", "state":"UP", "zip":"250002", "location":[28.9926174, 77.692485], "fees":3500, "tags":["fully computerized"], "rating":"4.5"}	
+Response:
+{
+    "_index": "schools",
+    "_type": "school",
+    "_id": "4",
+    "_version": 1,
+    "result": "created",
+    "_shards": {
+        "total": 2,
+        "successful": 2,
+        "failed": 0
+    },
+    "_seq_no": 1,
+    "_primary_term": 1
+}
+
+Versioning
+-------------------
+Adding or Updating the index
+	POST http://<host_ip>:9200/<index>/<mapping_name>/<index_id>version=<version_num>
+	Eg: POST http://10.138.32.26:9200/schools/school/1?version=1
+RequestBody:
+{"name":"Central School", "description":"CBSE Affiliation", "street":"Nagan","city":"paprola", "state":"HP", "zip":"176115", "location":[31.8955385, 76.8380405],"fees":2200, "tags":["Senior Secondary", "beautiful campus"], "rating":"3.3"}
+RequestBody:
+{
+    "_index": "schools",
+    "_type": "school",
+    "_id": "1",
+    "_version": 2,
+    "result": "updated",
+    "_shards": {
+        "total": 2,
+        "successful": 2,
+        "failed": 0
+    },
+    "_seq_no": 1,
+    "_primary_term": 1
+}
+
+GET 
+-------
+	GET http://<host_ip>:9200/<index>/<mapping_name>/<index_id>
+	Eg: GET http://10.138.32.26:9200/schools/school/4
+Response:
+{
+  "_index" : "schools",
+  "_type" : "school",
+  "_id" : "4",
+  "_version" : 1,
+  "found" : true,
+  "_source" : {
+    "name" : "City School",
+    "description" : "ICSE",
+    "street" : "West End",
+    "city" : "Meerut",
+    "state" : "UP",
+    "zip" : "250002",
+    "location" : [
+      28.9926174,
+      77.692485
+    ],
+    "fees" : 3500,
+    "tags" : [
+      "fully computerized"
+    ],
+    "rating" : "4.5"
+  }
+}
+
+GET only data
+---------------
+	POST http://<host_ip>:9200/<index>/<mapping_name>/<index_id>/_source
+	Eg: POST http://10.138.32.26:9200/schools/school/1/_source	
+Response:
+{
+  "name" : "Central School",
+  "description" : "CBSE Affiliation",
+  "street" : "Nagan",
+  "city" : "paprola",
+  "state" : "HP",
+  "zip" : "176115",
+  "location" : [
+    31.8955385,
+    76.8380405
+  ],
+  "fees" : 2200,
+  "tags" : [
+    "Senior Secondary",
+    "beautiful campus"
+  ],
+  "rating" : "3.3"
+}	

@@ -1,0 +1,6 @@
+INDEX VERSION 1.4+C:\Users\Uno\Desktop\self\AIS_Bangkok\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+590058448.index
+2847845511.index
+1175847651.index
+1465044304.index
+3949280489.index
