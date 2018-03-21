@@ -305,5 +305,37 @@ CREATE DATABASE "alltrade_test"
   
 =============================
 deleting the user from pg_catalog
-
 delete from pg_authid where rolname = 'admin_alltrade';  
+====================================
+error : postgres error invalid primary checkpoint record
+solution : pg_resetxlog -f DATADIR 
+=====================================
+Redistribution of Data in postgresxl
+The redistribution funcionality is still pretty basic, but what is simply does is:
+
+-- fetch all the data of the table to be redistributed on Coordinator
+		Data is store in the base directory in pgsql_tmp folder with some filename
+-- Truncate the table
+-- Update the catalogs to the new distribution type
+-- Redistribute the data cached on Coordinator
+
+ALTER TABLE with clauses DISTRIBUTE BY, ADD NODE, DELETE NODE, TO NODE or TO GROUP is used for data redistribution among nodes specific to Postgres-XL. Those clauses cannot be used with other commands.
+
+Multiple redistribution scenarios are possible depending on modifications done:
+
+Default redistribution:
+This is the slowest scenario possible. It is done in 3 or 4 steps. Data is firstly saved on Coordinator by fetching all the data with COPY TO command. At this point all the tuples are saved using a tuple store. The amount of cache allowed for tuple store operation can be controlled with work_mem. Then the table is truncated on all the nodes. Then catalogs are updated. Finally data inside the tuple store is redistributed using an internal COPY FROM mechanism. REINDEX is issued if necessary. The overall performance of this scenario is close to the time necessary to run consecutively COPY TO and COPY FROM.
+
+Redistribution from replicated to replicated table:
+The node list of a table can have new nodes as well as removed nodes. If nodes are only removed, TRUNCATE is launched to remote nodes that are removed. If new nodes are added, then table data is fetched on the Coordinator with COPY TO and stored inside a tuple store controlled with work_mem, then data stored is only sent to the new nodes using COPY FROM with data stored inside the tuplestore. REINDEX is issued if necessary.
+
+Redistribution from replicated to distributed table:
+If the relation node list contains new nodes, the default redistribution mechanism is used. However, if the node list of relation after redistribution is included in node list of relation after redistribution, as all the tuples are already located on remote nodes, it is not necessary to fetch any data on Coordinator. Hence, DELETE is used to remove on remote nodes only the necessary tuples. This query selects tuples to remove with conditions based on the number of nodes in the node list of relations after redistribution, the HASH or MODULO value used for new distribution and the remote node itself where DELETE is launched.. REINDEX is issued if necessary.
+
+Redistribution from distributed to replicated table:
+In this case the default redistribution mechanism is used.
+=====================================
+ALTER table reference
+
+https://www.postgres-xl.org/documentation/sql-altertable.html
+

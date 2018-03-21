@@ -78,10 +78,10 @@ CREATE DATABASE "alltrade"
   LC_CTYPE = 'en_US.UTF-8';
   
 --Taking dump with multiple threads
-time pg_dump -p 30001 -d all_trade -Fd -j 2 -t local_service_requests_new8 -a -f /tmp/stock_adjustment_arch/
+pg_dump -p 30001 -d all_trade -Fd -j 2 -t local_service_requests_new8 -a -f /tmp/stock_adjustment_arch/
 
 
-time pg_dump -p 30001 -d all_trade -g -Fd -j 2 -t stock_adjustment -f /tmp/stock_adjustment_arch/
+pg_dump -p 30001 -d all_trade -g -Fd -j 2 -t stock_adjustment -f /tmp/stock_adjustment_arch/
 pg_restore -p 30001 -d all_trade -Fd -j 2 -t stock_adjustment -f /tmp/stock_adjustment_arch/
 
 
@@ -93,3 +93,14 @@ SELECT *
 chmod -R 0777 /app/data/
 chmod -R 0777 /app/commitlog/
 
+--Checking the locks
+SELECT pl.locktype, psa.datname, psa.pid, psa.xact_start, substring(psa.query, 0, 50) FROM pg_locks pl LEFT JOIN pg_stat_activity psa ON pl.pid = psa.pid where psa.datname = 'all_trade' order by psa.xact_start asc;  
+
+
+SELECT pl.mode, psa.datname, count(psa.pid),psa.pid, psa.xact_start, substring(psa.query, 0, 50) FROM pg_locks pl LEFT JOIN pg_stat_activity psa ON pl.pid = psa.pid where psa.datname = 'all_trade' group by psa.pid, pl.mode, psa.datname,psa.xact_start,psa.query  order by psa.xact_start;
+
+
+SELECT pl.transactionid,pl.mode, psa.datname, count(psa.pid),psa.pid, psa.xact_start, substring(psa.query, 0, 50) FROM pg_locks pl LEFT JOIN pg_stat_activity psa ON pl.pid = psa.pid where psa.datname = 'all_trade' order by psa.xact_start; 
+
+
+SELECT pl.transactionid,pl.mode, psa.datname, count(psa.pid),psa.pid, psa.xact_start, substring(psa.query, 0, 50) FROM pg_locks pl LEFT JOIN pg_stat_activity psa ON pl.pid = psa.pid where psa.datname = 'all_trade' group by psa.pid, pl.mode, psa.datname,psa.xact_start,psa.query,  pl.transactionid  order by psa.xact_start; 
